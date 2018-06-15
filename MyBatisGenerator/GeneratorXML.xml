@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+
+
+	<context id="DB2Tables" targetRuntime="MyBatis3">
+
+		<!-- 不生成注释 -->
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+
+
+
+
+		<!-- 连接的数据库的信息 -->
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3306/text" userId="root"
+			password="root">
+		</jdbcConnection>
+
+		<!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer，为 true时把JDBC DECIMAL 
+			和 NUMERIC 类型解析为java.math.BigDecimal -->
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+
+		<!-- javaBean生成的位置 -->
+		<javaModelGenerator targetPackage="com.imooc.entity"
+			targetProject=".\src">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+
+
+		<!-- sql映射文件的位置-->
+		<sqlMapGenerator targetPackage="com.imooc.mapper" targetProject=".\src">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<!-- dao的位置位置 -->
+		<javaClientGenerator type="XMLMAPPER"
+			targetPackage="com.imooc.dao" targetProject=".\src">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+
+		<!-- tableName对应数据库中的表名，domainObjectName对应实体类 -->
+		<table tableName="student" domainObjectName="Student"></table>
+
+
+	</context>
+</generatorConfiguration>
