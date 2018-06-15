@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.IStudentDao">
+
+   <!-- 当表的字段和类的属性不一样时候
+   column指向的是表中的字段，property指向的是类中的属性
+    <resultMap type="entity.Student" id="StudentResult">
+    <id column="tid"  property="id"/>
+    <result column="tusername"  property="username"/>
+    <result column="tpassword"   property="password"/>   
+  </resultMap>
+   -->
+
+
+<select id="selectStudentByIf"  resultType="Student">
+  select id,name,score from student where 1 = 1
+  <if test="name != null and name != ''">
+     and name like '%' #{name} '%'
+  </if>
+    <if test="age >0">
+     and age > #{age}
+  </if>
+</select>
+
+
+<select id="selectStudentByWhere"  resultType="Student">
+  select id,name,score from student 
+  <where>
+     <if test="name != null and name != ''">
+	   and name like '%' #{name} '%'
+    </if>
+	<if test="age >0">
+		and age > #{age}
+	</if>
+  </where>
+</select>
+	
+	
+	
+<select id="selectStudentByChoose"  resultType="Student">
+  select id,name,score from student 
+  <where>
+     <choose>
+        <when test=" name !=null and name !='' "> and name like '%' #{name} '%' </when>
+         <when test =" age > 0"> and age > #{age}</when>
+        <otherwise>and 1 = 2</otherwise>
+     </choose>
+  </where>
+</select>
+
+
+
+
+<select id="selectStudentByForeach"  resultType="Student">
+  select id,name,age,score from student 
+  <where>
+     <if test="array.length > 0">
+       id in
+       <foreach collection="array"  open="("  close=")"  item="myid" separator=",">
+         #{myid}
+       </foreach>
+     </if>
+  </where>
+</select>
+
+<select id="selectStudentByForeach2"  resultType="Student">
+  select id,name,age,score from student 
+  <where>
+     <if test="list.size > 0">
+       id in
+       <foreach collection="list"  open="("  close=")"  item="myid" separator=",">
+         #{myid}
+       </foreach>
+     </if>
+  </where>
+</select>
+</mapper>
