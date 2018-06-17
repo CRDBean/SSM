@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+
+	<!-- 安全管理器 -->
+	<!-- 配置 SecurityManager -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="cacheManager" ref="cacheManager" />
+		<property name="realm" ref="jdbcRealm"></property>
+		<property name="realms">
+			<list>
+				<ref bean="jdbcRealm" />
+				<!-- <ref bean="secondRealm"/> -->
+			</list>
+		</property>
+	</bean>
+
+
+	<!-- 缓存管理器 使用Ehcache实现 -->
+	<!-- 配置 CacheManager. （需要加入 ehcache 的 依赖 包及配置文件） -->
+	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManagerConfigFile" value="classpath:ehcache.xml" />
+	</bean>
+
+
+
+	<!-- 配置 Realm，实现加密和授权 -->
+	<bean id="jdbcRealm" class="com.imooc.realms.ShiroRealm">
+		<!-- 配置加密算法 -->
+		<property name="credentialsMatcher">
+			<bean class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+				<!-- 加密的种类 -->
+				<property name="hashAlgorithmName" value="MD5"></property>
+				<!-- 加密的次数 -->
+				<property name="hashIterations" value="1024"></property>
+			</bean>
+		</property>
+	</bean>
+
+
+
+	<!-- 配置 LifecycleBeanPostProcessor. 可以自定的来调用配置在 Spring IOC 容器中 shiro bean 
+		的生命周期方法. -->
+	<bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+
+	<!-- 启用 IOC 容器中使用 shiro 的注解. 但必须在配置了 LifecycleBeanPostProcessor 之后才可以使用. -->
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+		depends-on="lifecycleBeanPostProcessor" />
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean>
+
+
+	<!-- 配置 ShiroFilter. id 必须和 web.xml 文件中配置的 DelegatingFilterProxy 的 <filter-name> 
+		一致. 若不一致, 则会抛出: NoSuchBeanDefinitionException. 因为 Shiro 会来 IOC 容器中查找和 <filter-name> 
+		名字对应的 filter bean. -->
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager" />
+		<!-- 没有登录的用户请求需要登录的页面时自动跳转到登录页面，不是必须的属性，不输入地址的话会自动寻找项目web项目的根目录下的”/login.jsp”页面 -->
+		<property name="loginUrl" value="/login.jsp" />
+		<!-- 登录成功默认跳转页面，不配置则跳转至”/”。如果登陆前点击的一个需要登录的页面，则在登录自动跳转到那个需要登录的页面。不跳转到此 -->
+		<property name="successUrl" value="/list.jsp" />
+		<!-- 没有权限默认跳转的页面 -->
+		<property name="unauthorizedUrl" value="/unauthorized.jsp" />
+
+
+		<!-- 配置哪些页面需要受保护. 以及访问这些页面需要的权限. 1). anon 可以被匿名访问 2). authc 必须认证(即登录)后才可能访问的页面. 
+			3). logout 登出. 4). roles 角色过滤器 -->
+		<property name="filterChainDefinitions">
+			<value>
+
+				<!-- action可以匿名访问 -->
+				/*.action=anon
+				<!-- 登录界面，可以匿名访问 -->
+				/login.jsp = anon
+				/jquery/** = anon
+				<!-- 退出登录方法可以匿名访问 -->
+				/logout = logout
+
+
+				<!-- 授权 -->
+				<!-- user.jsp只有user权限才能访问，否则跳转到/unauthorized.jsp -->
+				/user.jsp=roles[user]
+				<!-- admin.jsp只有admin权限才能访问，否则跳转到/unauthorized.jsp -->
+				/admin.jsp=roles[admin]
+
+
+				<!-- 剩下的所有都要认证后访问 -->
+				/** = authc
+
+
+			</value>
+		</property>
+
+
+	</bean>
+
+
+
+
+
+</beans>
