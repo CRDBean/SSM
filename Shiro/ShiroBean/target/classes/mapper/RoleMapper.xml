@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.imooc.dao.RoleDao">
+
+
+
+
+
+	<resultMap id="roleMap" type="com.imooc.entity.Role">
+		<id column="role_id" property="id" jdbcType="INTEGER" />
+		<result column="role_name" property="name" jdbcType="VARCHAR" />
+		<result column="role_desc" property="desc" jdbcType="VARCHAR" />
+		<!-- 多对多关联映射：collection -->
+		<collection property="permissions" ofType="com.imooc.entity.Permission">
+			<id column="permission_id" property="id" jdbcType="INTEGER" />
+			<result column="permission_name" property="name" jdbcType="VARCHAR" />
+			<result column="permission_desc" property="desc" jdbcType="VARCHAR" />
+		</collection>
+	</resultMap>
+
+
+
+
+
+
+	<select id="selectRoleById" resultMap="roleMap"
+		parameterType="int">
+		select a.role_id,a.role_name,a.role_desc,b.permission_id,b.permission_name,permission_desc from role a,permission b,role_permission c 
+		where c.role_id = a.role_id 
+		and c.permission_id = b.permission_id 
+		and a.role_id =#{id}
+	</select>
+	<select id="selectRoles" resultMap="roleMap">
+		select a.role_id,a.role_name,a.role_desc,b.permission_id,b.permission_name,permission_desc from role a,permission b,role_permission c 
+		where c.role_id = a.role_id 
+		and c.permission_id = b.permission_id 
+	</select>
+
+
+
+</mapper>

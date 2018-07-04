@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.dao.UserDao">
+
+
+
+
+
+	<resultMap id="userMap" type="com.example.demo.entity.User">
+		<id column="user_id" property="id" jdbcType="INTEGER" />
+		<result column="user_name" property="name" jdbcType="VARCHAR" />
+		<result column="user_password" property="password" jdbcType="VARCHAR" />
+		<!-- 多对多关联映射：collection -->
+		<collection property="roles" ofType="com.example.demo.entity.Role">
+			<id column="role_id" property="id" jdbcType="INTEGER" />
+			<result column="role_name" property="name" jdbcType="VARCHAR" />
+			<result column="role_desc" property="desc" jdbcType="VARCHAR" />
+			<!-- 多对多关联映射：collection -->
+			<collection property="permissions" ofType="com.example.demo.entity.Permission">
+				<id column="permission_id" property="id" jdbcType="INTEGER" />
+				<result column="permission_name" property="name" jdbcType="VARCHAR" />
+				<result column="permission_desc" property="desc" jdbcType="VARCHAR" />
+			</collection>
+
+
+		</collection>
+	</resultMap>
+
+
+
+
+
+
+	<select id="selectUserById" resultMap="userMap" parameterType="int">
+		select e.user_id,e.user_name,e.user_password,
+		a.role_id,a.role_name,a.role_desc,
+		b.permission_id,b.permission_name,
+		permission_desc
+		from role a,permission b,role_permission c,user_role
+		d,user e
+		where c.role_id = a.role_id
+		and c.permission_id =
+		b.permission_id
+		and d.user_id = e.user_id
+		and d.role_id = a.role_id and
+		e.user_id = #{id}
+	</select>
+
+	<select id="selectUserByName" resultMap="userMap" parameterType="java.lang.String">
+		select e.user_id,e.user_name,e.user_password,
+		a.role_id,a.role_name,a.role_desc,
+		b.permission_id,b.permission_name,
+		permission_desc
+		from role a,permission b,role_permission c,user_role
+		d,user e
+		where c.role_id = a.role_id
+		and c.permission_id =
+		b.permission_id
+		and d.user_id = e.user_id
+		and d.role_id = a.role_id and
+		e.user_name = #{name}
+	</select>
+
+	<select id="selectUsers" resultMap="userMap">
+		select
+		e.user_id,e.user_name,e.user_password,
+		a.role_id,a.role_name,a.role_desc,
+		b.permission_id,b.permission_name,
+		permission_desc
+		from role a,permission b,role_permission c,user_role
+		d,user e
+		where c.role_id = a.role_id
+		and c.permission_id =
+		b.permission_id
+		and d.user_id = e.user_id
+		and d.role_id = a.role_id
+	</select>
+
+
+
+</mapper>

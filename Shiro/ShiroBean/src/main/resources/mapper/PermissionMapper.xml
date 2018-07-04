@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.imooc.dao.PermissionDao">
+
+	<resultMap id="permissionMap" type="com.imooc.entity.Permission">
+		<id column="permission_id" property="id" jdbcType="INTEGER" />
+		<result column="permission_name" property="name" jdbcType="VARCHAR" />
+		<result column="permission_desc" property="desc" jdbcType="VARCHAR" />
+		
+		
+		
+	</resultMap>
+
+
+
+
+
+
+	<select id="selectPermissionById" resultMap="permissionMap"  parameterType="int">
+		  select permission_id,permission_name,permission_desc from permission where permission_id = #{id}
+	</select>
+	<select id="selectPermissions" resultMap="permissionMap">
+		  select permission_id,permission_name,permission_desc from permission
+	</select>
+
+
+
+
+</mapper>

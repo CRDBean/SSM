@@ -1,0 +1,6 @@
+ShiroBean:
+   MyBatis  User Role  Permission  MySQL Maven  (·ÇWeb)
+SpringBoot_Shiro:
+    MyBatis User Role  Permission  MySQL  web   Maven
+Spring-Shiro:
+    SSM+Shiro  web  (·ÇMaven)  £¨·ÇMySQL£©

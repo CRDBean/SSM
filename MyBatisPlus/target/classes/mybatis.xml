@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+
+	<!-- 
+	=====>设置别名: 将com.imooc.entity.User设置为User 
+	如果不设置别名<select id="selectDemo" resultType="com.imooc.entity.User"> ***</select>
+	设置别名            <select id="selectDemo" resultType="User">***</select>
+	 -->
+	<typeAliases>
+		<package name="com.imooc.entity"></package>
+	</typeAliases>
+
+
+	
+
+</configuration>
